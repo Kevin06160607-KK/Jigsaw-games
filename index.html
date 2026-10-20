@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberGuard & Jigsaw Arcade</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #05050a;
+            --panel-bg: #12131c;
+            --primary: #00ffcc;
+            --secondary: #7928ca;
+            --accent: #ff007f;
+            --text-main: #ffffff;
+            --text-muted: #a0aec0;
+            --success: #00ff66;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: rgba(18, 19, 28, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid rgba(0, 255, 204, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 10px;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: 0.3s;
+            cursor: pointer;
+            padding: 0.5rem 0.8rem;
+            border-radius: 4px;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--primary);
+            background: rgba(0, 255, 204, 0.1);
+            box-shadow: 0 0 10px rgba(0, 255, 204, 0.2);
+        }
+
+        main {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1, h2 {
+            font-family: 'Orbitron', sans-serif;
+            margin-bottom: 1rem;
+            letter-spacing: 1px;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 3rem 1rem;
+            background: linear-gradient(135deg, rgba(0, 255, 204, 0.05), rgba(121, 40, 202, 0.05));
+            border-radius: 1rem;
+            border: 1px solid rgba(0, 255, 204, 0.3);
+            margin-bottom: 2rem;
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            max-width: 700px;
+            margin: 0 auto 1.5rem auto;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #000;
+            padding: 0.7rem 1.4rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+            cursor: pointer;
+            transition: 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.4);
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(0, 255, 204, 0.8);
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .game-card {
+            background: var(--panel-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(0, 255, 204, 0.2);
+        }
+
+        .game-icon {
+            height: 130px;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--primary);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .game-content {
+            padding: 1.2rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .game-content h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .game-content p {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .arcade-box {
+            background: var(--panel-bg);
+            padding: 2rem;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 255, 204, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .puzzle-board {
+            width: 270px;
+            height: 270px;
+            background: #000;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 3px;
+            border: 3px solid var(--primary);
+            border-radius: 6px;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.3);
+        }
+
+        .puzzle-tile {
+            background: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+            color: #fff;
+            cursor: pointer;
+            user-select: none;
+            transition: 0.2s;
+        }
+
+        .puzzle-tile.empty {
+            background: #05050a;
+            cursor: default;
+        }
+
+        .console-input {
+            width: 100%;
+            max-width: 380px;
+            padding: 0.7rem;
+            background: #000;
+            border: 1px solid var(--primary);
+            color: var(--success);
+            border-radius: 6px;
+            font-family: 'Orbitron', monospace;
+            text-align: center;
+            outline: none;
+        }
+
+        .status-msg {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            color: var(--success);
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.2rem;
+            background: var(--panel-bg);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <i class="fa-solid fa-shield-virus"></i> CYBERARCADE
+        </div>
+        <ul class="nav-links">
+            <li><a onclick="switchTab('home')" class="active" id="nav-home">Home</a></li>
+            <li><a onclick="switchTab('jigsaw')" id="nav-jigsaw">1. Jigsaw</a></li>
+            <li><a onclick="switchTab('cracker')" id="nav-cracker">2. Pass Cracker</a></li>
+            <li><a onclick="switchTab('hashmatch')" id="nav-hashmatch">3. Hash Match</a></li>
+            <li><a onclick="switchTab('decoder')" id="nav-decoder">4. Cipher Decode</a></li>
+        </ul>
+    </header>
+
+    <main>
+        <!-- HOME SECTION -->
+        <section id="home" class="section active">
+            <div class="hero">
+                <h1>Cybersecurity & Gaming Hub</h1>
+                <p>Master Data Integrity Mechanisms, Cryptography, and Security Concepts through immersive arcade mini-games.</p>
+                <button class="btn" onclick="switchTab('jigsaw')">Start Playing Now</button>
+            </div>
+
+            <h2>Arcade Game Modules</h2>
+            <div class="games-grid">
+                <div class="game-card">
+                    <div class="game-icon"><i class="fa-solid fa-puzzle-piece"></i></div>
+                    <div class="game-content">
+                        <div>
+                            <h3>Cyber Jigsaw Puzzle</h3>
+                            <p>Rearrange security blocks sequentially to restore encryption stability.</p>
+                        </div>
+                        <button class="btn" onclick="switchTab('jigsaw')">Play Game</button>
+                    </div>
+                </div>
+
+                <div class="game-card">
+                    <div class="game-icon"><i class="fa-solid fa-key"></i></div>
+                    <div class="game-content">
+                        <div>
+                            <h3>Password Cracker</h3>
+                            <p>Test hacking intuition by breaking simulated corporate passwords.</p>
+                        </div>
+                        <button class="btn" onclick="switchTab('cracker')">Play Game</button>
+                    </div>
+                </div>
+
+                <div class="game-card">
+                    <div class="game-icon"><i class="fa-solid fa-fingerprint"></i></div>
+                    <div class="game-content">
+                        <div>
+                            <h3>Data Hash Match</h3>
+                            <p>Verify data integrity checksums before malicious nodes intercept packets.</p>
+                        </div>
+                        <button class="btn" onclick="switchTab('hashmatch')">Play Game</button>
+                    </div>
+                </div>
+
+                <div class="game-card">
+                    <div class="game-icon"><i class="fa-solid fa-terminal"></i></div>
+                    <div class="game-content">
+                        <div>
+                            <h3>Cipher Decoder</h3>
+                            <p>Decrypt scrambled security intelligence briefs using cryptographic rules.</p>
+                        </div>
+                        <button class="btn" onclick="switchTab('decoder')">Play Game</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GAME 1: JIGSAW PUZZLE -->
+        <section id="jigsaw" class="section">
+            <div class="arcade-box">
+                <h2>Game 1: Cyber Jigsaw</h2>
+                <p style="color: var(--text-muted); font-size: 0.85rem;">Order tiles from 1 to 8 to restore encrypted node clusters.</p>
+                
+                <div class="puzzle-board" id="puzzleBoard"></div>
+                
+                <div>
+                    <button class="btn" onclick="shufflePuzzle()">Shuffle Blocks</button>
+                    <div class="status-msg" id="puzzleStatus"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GAME 2: PASSWORD CRACKER -->
+        <section id="cracker" class="section">
+            <div class="arcade-box">
+                <h2>Game 2: Password Strength</h2>
+                <p style="color: var(--text-muted); font-size: 0.85rem;">Type a secure password meeting all encryption complexity rules!</p>
+                
+                <input type="text" id="passInput" class="console-input" placeholder="Type password..." onkeyup="checkPassword()">
+                <div class="status-msg" id="passStatus" style="color: var(--accent);">Waiting for input...</div>
+            </div>
+        </section>
+
+        <!-- GAME 3: HASH MATCH -->
+        <section id="hashmatch" class="section">
+            <div class="arcade-box">
+                <h2>Game 3: Hash Integrity Match</h2>
+                <p style="color: var(--text-muted); font-size: 0.85rem;">Match the target checksum by typing the exact verification code.</p>
+                
+                <div style="font-family: 'Orbitron'; color: var(--primary); font-size: 1rem; background: #000; padding: 10px; border-radius: 5px; width: 100%; max-width: 380px;">
+                    Target: <span id="targetHash">A4F92B</span>
+                </div>
+                
+                <input type="text" id="hashInput" class="console-input" placeholder="Enter matching code..." onkeyup="verifyHashGame()">
+                <div class="status-msg" id="hashStatus"></div>
+            </div>
+        </section>
+
+        <!-- GAME 4: CIPHER DECODER -->
+        <section id="decoder" class="section">
+            <div class="arcade-box">
+                <h2>Game 4: Cipher Decoder</h2>
+                <p style="color: var(--text-muted); font-size: 0.85rem;">Decode cipher: <b style="color: var(--primary);">"FDBFWRPH"</b> (Shift 3 backward)</p>
+                
+                <input type="text" id="cipherInput" class="console-input" placeholder="Type decoded word (Caps)..." onkeyup="checkCipher()">
+                <div class="status-msg" id="cipherStatus"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 CyberArcade Hub | Built for Security Enthusiasts</p>
+    </footer>
+
+    <script>
+        // Tab Navigation Switcher
+        function switchTab(tabId) {
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.nav-links a').forEach(nav => nav.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            const navElem = document.getElementById('nav-' + tabId);
+            if(navElem) {
+                navElem.classList.add('active');
+            }
+        }
+
+        // 1. Jigsaw Game Logic
+        let board = [1, 2, 3, 4, 5, 6, 7, '', 8];
+
+        function renderPuzzle() {
+            const boardContainer = document.getElementById('puzzleBoard');
+            if(!boardContainer) return;
+            boardContainer.innerHTML = '';
+            board.forEach((val, idx) => {
+                const tile = document.createElement('div');
+                tile.className = `puzzle-tile ${val === '' ? 'empty' : ''}`;
+                tile.innerText = val;
+                tile.onclick = () => moveTile(idx);
+                boardContainer.appendChild(tile);
+            });
+            checkWin();
+        }
+
+        function moveTile(idx) {
+            const emptyIdx = board.indexOf('');
+            const validMoves = [emptyIdx - 1, emptyIdx + 1, emptyIdx - 3, emptyIdx + 3];
+            if (validMoves.includes(idx)) {
+                board[emptyIdx] = board[idx];
+                board[idx] = '';
+                renderPuzzle();
+            }
+        }
+
+        function shufflePuzzle() {
+            for (let i = board.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [board[i], board[j]] = [board[j], board[i]];
+            }
+            const statusElem = document.getElementById('puzzleStatus');
+            if(statusElem) statusElem.innerText = '';
+            renderPuzzle();
+        }
+
+        function checkWin() {
+            const winningState = [1, 2, 3, 4, 5, 6, 7, 8, ''];
+            if (board.every((val, i) => val === winningState[i])) {
+                const statusElem = document.getElementById('puzzleStatus');
+                if(statusElem) statusElem.innerText = '⚡ [INTEGRITY RESTORED] PUZZLE SOLVED!';
+            }
+        }
+
+        // 2. Password Cracker Logic
+        function checkPassword() {
+            const val = document.getElementById('passInput').value;
+            const status = document.getElementById('passStatus');
+            if (val.length < 8) {
+                status.style.color = 'var(--accent)';
+                status.innerText = 'Status: Weak (Min 8 chars)';
+            } else if (!/[A-Z]/.test(val) || !/[0-9]/.test(val)) {
+                status.style.color = 'orange';
+                status.innerText = 'Status: Moderate (Add Capitals & Numbers)';
+            } else {
+                status.style.color = 'var(--success)';
+                status.innerText = '🔒 Status: UNBREAKABLE ENCRYPTION!';
+            }
+        }
+
+        // 3. Hash Match Logic
+        function verifyHashGame() {
+            const val = document.getElementById('hashInput').value.trim().toUpperCase();
+            const status = document.getElementById('hashStatus');
+            if (val === 'A4F92B') {
+                status.style.color = 'var(--success)';
+                status.innerText = '✅ HASH MATCHED! Data integrity verified.';
+            } else {
+                status.style.color = 'var(--accent)';
+                status.innerText = '❌ Checksum mismatch...';
+            }
+        }
+
+        // 4. Cipher Decoder Logic
+        function checkCipher() {
+            const val = document.getElementById('cipherInput').value.trim().toUpperCase();
+            const status = document.getElementById('cipherStatus');
+            if (val === 'DATACOMP') {
+                status.style.color = 'var(--success)';
+                status.innerText = '🎉 DECRYPTION SUCCESSFUL!';
+            } else {
+                status.style.color = 'var(--accent)';
+                status.innerText = '⚠️ Incorrect decryption key.';
+            }
+        }
+
+        // Initializer
+        window.onload = () => {
+            renderPuzzle();
+        };
+    </script>
+</body>
+</html>
